@@ -6,7 +6,9 @@
  */
 #include <string>
 #include <iostream>
+#include <fstream>
 #include <stdio.h>
+#include <iomanip>
 #include <vector>
 #include <algorithm>
 #include <map>
@@ -14,42 +16,50 @@
 #include "DC3.h"
 #include "Kasai_LCP.h"
 #include "patterns.h"
+#include "projectIO.h"
 
 using namespace std;
 
 int main()
 {
+	const char *file_path = "/media/sf_D_DRIVE/Uni/Sem162/CSG6224 - Special Topic/Project Code/Sample Files/test.txt";
+//	const char *file_path = "/media/sf_D_DRIVE/Uni/Sem152/CSI6110 - Software Development Processes/CSP2151 Lectures.zip";
+	cout << "Reading: " << file_path << "..." << endl;
+	vector<BYTE> inputString = getFileByteVector(file_path);
+	cout << "File read successfully:" << endl;
+	printHex(inputString, 0, 30);
+	cout << endl;
 
-	string text = "abbaaabbaaabbacabaabbacab";
-	int n = text.size();
+	int n = inputString.size();
+	cout << "n = " << n << endl;
 
 	// Note: DC3 algorithm requires integers representing the
 	// lexicographic order of the character in the dictionary
-	map<char, int> dict;
-	dict['a'] = 1;
-	dict['b'] = 2;
-	dict['c'] = 3;
+	cout << "Creating integer input..." << endl;
+	vector<int> inputInts = createIntVector(inputString);
 
-	int T[n+3] = {0};
-	for (int i = 0; i < n; i++) {
-		T[i] = dict[text[i]];
-	}
+	// Size of dictionary 'K'
+    int K = 256;
 
-    int K = dict.size();
-    int SA[n + 3] = {0};
+    vector<int> SA_vec (n+3, 0);
+//    int SA[inputString.size() + 3] = {0};
 
-    DC3(T, SA, n, K);
+    cout << "Calculating SA..." << endl;
+    DC3(inputInts.data(), SA_vec.data(), (int)inputString.size(), K);
+//    DC3(inputInts.data(), SA, (int)inputString.size(), K);
+//    vector<int> SA_vec;
+//    SA_vec.assign(SA, SA + n);
 
-    vector<int> SA_vec;
-    SA_vec.assign(SA, SA + n);
-
-    vector<int> LCP = kasai(text, SA_vec);
-    printf("\nDC3 SA and LCP:\n");
-    printf("SA\tLCP\tSUFFIX\n");
-	for (int i = 0; i < n; i++) {
-		cout << SA[i] << "\t"
-			 << LCP[i] << "\t"
-			 << text.substr(SA[i], n) << endl;
+    cout << "Calculating LCP..." << endl;
+    vector<int> LCP = kasai(inputString, SA_vec);
+    cout << endl << "DC3 SA and LCP:" << endl;
+    cout << "SA\tLCP\tSUFFIX" << endl;
+    int maxPrint = min(n, 20);
+	for (int i = 0; i < maxPrint; i++) {
+		cout << SA_vec[i] << "\t"
+			 << LCP[i] << "\t";
+		printHex(inputString, SA_vec[i], 30);
+		cout << endl;
 	}
 
 	vector<Pattern> patterns = findPatternsOfLength(4, LCP);
@@ -58,15 +68,17 @@ int main()
 
 
 	printf("Common patterns\n");
-	for (unsigned int i = 0; i < patterns.size(); i++) {
+	int numPrint = min(5, (int)patterns.size());
+	for (int i = 0; i < numPrint; i++) {
 		Pattern p = patterns[i];
+		cout << "Pattern: ";
+		printHex(inputString, p.start(SA_vec), p.length);
+		cout << ", count: " << p.occurrences << endl;
 
-		string substring = text.substr(p.start(SA_vec), p.length);
-		cout << "Pattern: " << substring
-				<< ", count: " << p.occurrences << endl;
 	}
 
-
+	// Below is to test SA construction for 'test.txt'
+//	  string text = "abbaaabbaaabbacabaabbacab";
 //    printf("\n\n");
 //    SuffixArray suffixarray(text);
 //    printf("Sanfoundry SA:\n");

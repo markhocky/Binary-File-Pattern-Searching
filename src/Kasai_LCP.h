@@ -10,8 +10,10 @@
 
 #include <vector>
 #include <string>
+#include "projectIO.h"
 
 using namespace std;
 vector<int> kasai(string txt, vector<int> suffixArr);
+vector<int> kasai(vector<BYTE> txt, vector<int> suffixArr);
 
 #endif /* KASAI_LCP_H_ */

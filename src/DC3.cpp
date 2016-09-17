@@ -1,11 +1,14 @@
 /*
  * DC3.cpp
  * Difference Cover (mod 3) suffix array construction algorithm
- * Copied from Karkkainen 2006 - Linear Work Suffix Array Construction (Appendix A)
+ * Base algorithm copied from Karkkainen 2006 -
+ * 	Linear Work Suffix Array Construction (Appendix A)
+ * Has been modified to work with Byte input.
  */
-
+#include <iostream>
 #include "DC3.h"
 // lexicographic order for pairs and triples
+
 inline bool leq(int a1, int a2, int b1, int b2) {
 	return (a1 < b1 || (a1 == b1 && a2 < b2));
 }
@@ -30,7 +33,7 @@ static void radixPass(int* a, int* b, int* r, int n, int K) {
 // 'n' length of input - note this is 3 smaller than array length
 // 'K' is size of dictionary of characters in input array
 // Require T[n]=T[n+1]=T[n+2]=0, n>=2
-void DC3(int* T, int* SA, int n, int K) {
+void DC3(int* inputString, int* SA, int n, int K) {
 	int n0=(n+2)/3, n1=(n+1)/3, n2=n/3, n02=n0+n2;
 	int* R = new int[n02 + 3];
 	R[n02] = R[n02+1] = R[n02+2] = 0;
@@ -47,18 +50,18 @@ void DC3(int* T, int* SA, int n, int K) {
 
 	//******* Step 1: Sort sample suffixes ********
 	// lsb radix sort the mod 1 and mod 2 triples
-	radixPass(R , SA12, T+2, n02, K);
-	radixPass(SA12, R , T+1, n02, K);
-	radixPass(R , SA12, T , n02, K);
+	radixPass(R , SA12, inputString+2, n02, K);
+	radixPass(SA12, R , inputString+1, n02, K);
+	radixPass(R , SA12, inputString , n02, K);
 	// find lexicographic names of triples and
 	// write them to correct places in R
 	int name = 0, c0 = -1, c1 = -1, c2 = -1;
 	for (int i = 0; i < n02; i++) {
-		if (T[SA12[i]] != c0 ||
-			T[SA12[i]+1] != c1 ||
-			T[SA12[i]+2] != c2)
+		if (inputString[SA12[i]] != c0 ||
+			inputString[SA12[i]+1] != c1 ||
+			inputString[SA12[i]+2] != c2)
 		{
-			name++; c0 = T[SA12[i]]; c1 = T[SA12[i]+1]; c2 = T[SA12[i]+2];
+			name++; c0 = inputString[SA12[i]]; c1 = inputString[SA12[i]+1]; c2 = inputString[SA12[i]+2];
 		}
 		if (SA12[i] % 3 == 1) {
 			// write to R1
@@ -81,14 +84,14 @@ void DC3(int* T, int* SA, int n, int K) {
 	//******* Step 2: Sort nonsample suffixes ********
 	// stably sort the mod 0 suffixes from SA12 by their first character
 	for (int i=0, j=0; i < n02; i++) if (SA12[i] < n0) R0[j++] = 3*SA12[i];
-	radixPass(R0, SA0, T, n0, K);
+	radixPass(R0, SA0, inputString, n0, K);
 	//******* Step 3: Merge ********
 	// merge sorted SA0 suffixes and sorted SA12 suffixes
 	for (int p=0, t=n0-n1, k=0; k < n; k++) {
 		#define GetI() (SA12[t] < n0 ? SA12[t] *3+1: (SA12[t] - n0) * 3 + 2)
 		int i = GetI(); // pos of current offset 12 suffix
 		int j = SA0[p]; // pos of current offset 0 suffix
-		if (SA12[t] < n0 ? leq(T[i],R[SA12[t] + n0], T[j],R[j/3]): leq(T[i],T[i+1],R[SA12[t]-n0+1], T[j],T[j+1],R[j/3+n0])) {
+		if (SA12[t] < n0 ? leq(inputString[i],R[SA12[t] + n0], inputString[j],R[j/3]): leq(inputString[i],inputString[i+1],R[SA12[t]-n0+1], inputString[j],inputString[j+1],R[j/3+n0])) {
 			SA[k] = i; t++;
 			if (t == n02) // done --- only SA0 suffixes left
 			for (k++; p < n0; p++, k++) SA[k] = SA0[p];

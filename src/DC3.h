@@ -8,6 +8,6 @@
 #ifndef DC3_H_
 #define DC3_H_
 
-void DC3(int* T, int* SA, int n, int K);
+void DC3(int* inputString, int* SA, int n, int K);
 
 #endif /* DC3_H_ */
