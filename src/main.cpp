@@ -45,16 +45,16 @@ int main( int argc, char *argv[] )
 
 	/*
 	 * Other example files:
-		"/media/sf_D_DRIVE/Uni/Sem152/CSI6110 - Software Development Processes/CSP2151 Lectures.zip"
+	 * "/media/sf_D_DRIVE/Uni/Sem162/CSG6224 - Special Topic/Project Code/Sample Files/mapsettings.cfg"
+	 * "/media/sf_D_DRIVE/Uni/Sem162/CSG6224 - Special Topic/Project Code/Sample Files/mapsettings1.cfg"
+	 * "/media/sf_D_DRIVE/Uni/Sem162/CSG6224 - Special Topic/Project Code/Sample Files/mapsettings3.cfg"
+	 * "/media/sf_D_DRIVE/Uni/Sem152/CSI6110 - Software Development Processes/CSP2151 Lectures.zip"
+	 * "/media/sf_D_DRIVE/Uni/Sem152/CSI6110 - Software Development Processes/Sommerville - Software Engineering - 9th Ed.pdf"
 	*/
 	cout << "Reading: " << file_path << "..." << endl;
 	vector<BYTE> inputString = getFileByteVector(file_path);
-	cout << "File read successfully:" << endl;
-	printHex(inputString, 0, 30);
-	cout << endl;
-
 	int n = inputString.size();
-	cout << "n = " << n << endl;
+	cout << "File read successfully. Num bytes read: " << n << endl;
 
 	// Note: DC3 algorithm requires integers representing the
 	// lexicographic order of the character in the dictionary
@@ -70,7 +70,7 @@ int main( int argc, char *argv[] )
     vector<int> LCP = kasai(inputString, SA);
 
     // Print the SA and LCP arrays
-    printSAandLCP(SA, LCP, inputString);
+    printSAandLCP(SA, LCP, inputString, 30);
 
 	vector<Pattern> patterns = findPatternsOfLength(patternLength, LCP);
 	printPatterns(patterns, inputString, SA, numResults);

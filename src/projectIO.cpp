@@ -41,11 +41,11 @@ void printHex(vector<BYTE> input, int pos, int maxLen) {
 	cout << dec;
 }
 
-void printSAandLCP(vector<int> SA, vector<int> LCP, vector<BYTE> input) {
+void printSAandLCP(vector<int> SA, vector<int> LCP, vector<BYTE> input, int displayMax) {
     // Print the SA and LCP arrays
     cout << endl << "DC3 SA and LCP:" << endl;
     cout << "SA\tLCP\tSUFFIX" << endl;
-    int maxPrint = min((int)input.size(), 30);
+    int maxPrint = min((int)input.size(), displayMax);
 	for (int i = 0; i < maxPrint; i++) {
 		cout << SA[i] << "\t"
 			 << LCP[i] << "\t";

@@ -17,7 +17,8 @@ using namespace std;
 
 vector<BYTE> getFileByteVector(const char* filePath);
 
-void printSAandLCP(vector<int> SA, vector<int> LCP, vector<BYTE> input);
+void printSAandLCP(vector<int> SA, vector<int> LCP,
+		vector<BYTE> input, int displayMax);
 
 void printHex(vector<BYTE> inputString, int pos, int maxLen = 20);
 
