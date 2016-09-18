@@ -6,8 +6,7 @@
  */
 
 #include <vector>
-#include <iostream>
-#include <stdio.h>
+#include <algorithm>
 #include "patterns.h"
 
 using namespace std;
@@ -39,6 +38,7 @@ vector<Pattern> findPatternsOfLength(int m, vector<int> LCP) {
 			occ = 0;
 		}
 	}
+	sort(patterns.begin(), patterns.end(), compareOccurrences);
 	return patterns;
 }
 

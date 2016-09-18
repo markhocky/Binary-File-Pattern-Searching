@@ -9,6 +9,7 @@
 #define PROJECTIO_H_
 
 #include <vector>
+#include "patterns.h"
 
 typedef unsigned char BYTE;
 
@@ -16,8 +17,11 @@ using namespace std;
 
 vector<BYTE> getFileByteVector(const char* filePath);
 
-vector<int> createIntVector(vector<BYTE> inputString);
+void printSAandLCP(vector<int> SA, vector<int> LCP, vector<BYTE> input);
 
 void printHex(vector<BYTE> inputString, int pos, int maxLen = 20);
+
+void printPatterns(vector<Pattern> patterns, vector<BYTE> input,
+		vector<int> SA, int displayMax);
 
 #endif /* PROJECTIO_H_ */

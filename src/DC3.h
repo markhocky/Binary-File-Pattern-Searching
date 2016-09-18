@@ -8,6 +8,12 @@
 #ifndef DC3_H_
 #define DC3_H_
 
-void DC3(int* inputString, int* SA, int n, int K);
+#include <vector>
+#include "projectIO.h"
+
+vector<int> createIntVector(vector<BYTE> inputString);
+
+vector<int> DC3(int* inputInts, int n, int K);
+vector<int> DC3(vector<int> inputInts, int n, int K);
 
 #endif /* DC3_H_ */

@@ -23,18 +23,12 @@ vector<BYTE> getFileByteVector(const char* filePath) {
 		file.seekg(0, ios::beg);
 		file.read((char*)fileString, size);
 		file.close();
+	} else {
+		cout << "Could not open file." << endl;
 	}
 	vector<BYTE> byteString;
 	byteString.assign(fileString, fileString + size);
 	return byteString;
-}
-
-vector<int> createIntVector(vector<BYTE> inputString) {
-	vector<int> output (inputString.size() + 3, 0);
-	for (vector<int>::size_type i = 0; i < inputString.size(); ++i) {
-		output[i] = inputString[i];
-	}
-	return output;
 }
 
 void printHex(vector<BYTE> input, int pos, int maxLen) {
@@ -46,4 +40,32 @@ void printHex(vector<BYTE> input, int pos, int maxLen) {
 	}
 	cout << dec;
 }
+
+void printSAandLCP(vector<int> SA, vector<int> LCP, vector<BYTE> input) {
+    // Print the SA and LCP arrays
+    cout << endl << "DC3 SA and LCP:" << endl;
+    cout << "SA\tLCP\tSUFFIX" << endl;
+    int maxPrint = min((int)input.size(), 30);
+	for (int i = 0; i < maxPrint; i++) {
+		cout << SA[i] << "\t"
+			 << LCP[i] << "\t";
+		printHex(input, SA[i], 30);
+		cout << endl;
+	}
+}
+
+void printPatterns(vector<Pattern> patterns, vector<BYTE> input, vector<int> SA, int displayMax) {
+	cout << "\nPatterns found: " << patterns.size() << endl;
+	printf("Common patterns\n");
+	int numPrint = min(displayMax, (int)patterns.size());
+	for (int i = 0; i < numPrint; ++i) {
+		Pattern p = patterns[i];
+		cout << "Pattern: ";
+		printHex(input, p.start(SA), p.length);
+		cout << ", count: " << p.occurrences << endl;
+
+	}
+}
+
+
 
