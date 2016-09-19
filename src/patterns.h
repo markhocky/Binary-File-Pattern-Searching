@@ -12,19 +12,20 @@
 
 using namespace std;
 
+typedef unsigned char BYTE;
+
 class Pattern {
 	public:
 		int position;
 		int length;
 		int occurrences; // how many times the pattern occurs.
 		Pattern(int length, int position, int occurrences);
-		int start(vector<int> SA) {
-			return SA[this->position]; // returns starting position of pattern
-		}
+		bool allZeroes(vector<BYTE> input);
 };
 
 bool compareOccurrences(const Pattern &a, const Pattern &b);
 
-vector<Pattern> findPatternsOfLength(int m, vector<int> LCP);
+vector<Pattern> findPatternsOfLength(int m, vector<int> LCP, vector<int> SA);
+vector<Pattern> findPatterns(int start, int end, int numResults, vector<int> LCP, vector<int> SA);
 
 #endif /* PATTERNS_H_ */

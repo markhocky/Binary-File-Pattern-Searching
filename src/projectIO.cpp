@@ -25,6 +25,7 @@ vector<BYTE> getFileByteVector(const char* filePath) {
 		file.close();
 	} else {
 		cout << "Could not open file." << endl;
+		throw exception();
 	}
 	vector<BYTE> byteString;
 	byteString.assign(fileString, fileString + size);
@@ -55,14 +56,20 @@ void printSAandLCP(vector<int> SA, vector<int> LCP, vector<BYTE> input, int disp
 }
 
 void printPatterns(vector<Pattern> patterns, vector<BYTE> input, vector<int> SA, int displayMax) {
-	cout << "\nPatterns found: " << patterns.size() << endl;
-	printf("Common patterns\n");
+	cout << "\n#\tCount\tPattern" << endl;
 	int numPrint = min(displayMax, (int)patterns.size());
+	int rowNum = 1;
 	for (int i = 0; i < numPrint; ++i) {
 		Pattern p = patterns[i];
-		cout << "Pattern: ";
-		printHex(input, p.start(SA), p.length);
-		cout << ", count: " << p.occurrences << endl;
+		if (p.allZeroes(input)) {
+			++numPrint;
+			continue;
+		} else {
+			cout << rowNum++ << "\t";
+			cout << p.occurrences << "\t";
+			printHex(input, p.position, p.length);
+			cout << endl;
+		}
 
 	}
 }

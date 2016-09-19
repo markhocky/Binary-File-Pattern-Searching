@@ -11,8 +11,6 @@
 #include <vector>
 #include "patterns.h"
 
-typedef unsigned char BYTE;
-
 using namespace std;
 
 vector<BYTE> getFileByteVector(const char* filePath);
