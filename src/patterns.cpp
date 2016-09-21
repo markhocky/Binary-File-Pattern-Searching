@@ -11,6 +11,13 @@
 
 using namespace std;
 
+// Default Constructor
+Pattern::Pattern() {
+	this->length = 0;
+	this->position = 0;
+	this->occurrences = 0;
+}
+
 // Constructor
 Pattern::Pattern(int length, int position, int occurrences) {
 	this->length = length;

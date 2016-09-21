@@ -13,7 +13,9 @@
 #include <algorithm>
 #include <map>
 #include "DC3.h"
+#include "sais.h"
 #include "Kasai_LCP.h"
+#include "sliding_window.h"
 #include "patterns.h"
 #include "projectIO.h"
 #include "testing.h"
@@ -58,11 +60,18 @@ int main( int argc, char *argv[] )
 	// lexicographic order of the character in the dictionary
 	cout << "Creating integer input..." << endl;
 	vector<int> inputInts = createIntVector(inputString);
-	// Size of dictionary 'K'
-    int K = 256;
 
     cout << "Calculating SA..." << endl;
-    vector<int> SA = DC3(inputInts, (int)inputString.size(), K);
+    // Using SAIS
+    vector<int> SA (inputString.size(), 0);
+    int result = sais(inputString.data(), SA.data(), n);
+    if (result == -1) {
+    	cerr << "Problem with SAIS calculation" << endl;
+    }
+
+    // Using DC3
+    //int K = 256; // Size of dictionary 'K'
+    //vector<int> SA = DC3(inputInts, (int)inputString.size(), K);
 
     cout << "Calculating LCP..." << endl;
     vector<int> LCP = kasai(inputString, SA);
@@ -72,11 +81,19 @@ int main( int argc, char *argv[] )
 
     vector<Pattern> patterns = findPatterns(smallestPattern, biggestPattern,
     		numResults, LCP, SA);
-	printPatterns(patterns, inputString, SA, numResults);
+	printPatterns(patterns, inputString, numResults);
 
 	if (testing) {
 		checkSAandLCP(SA, LCP);
 	}
+
+
+	cout << endl << "Pattern Search 2..." << endl;
+
+	vector<Pattern> P2 = searchPatterns(inputString, smallestPattern, biggestPattern);
+	printPatterns(P2, inputString, numResults);
+
+
 	return 0;
 }
 

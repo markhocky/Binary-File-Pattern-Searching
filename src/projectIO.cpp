@@ -55,7 +55,7 @@ void printSAandLCP(vector<int> SA, vector<int> LCP, vector<BYTE> input, int disp
 	}
 }
 
-void printPatterns(vector<Pattern> patterns, vector<BYTE> input, vector<int> SA, int displayMax) {
+void printPatterns(vector<Pattern> patterns, vector<BYTE> input, int displayMax) {
 	cout << "\n#\tCount\tPattern" << endl;
 	int numPrint = min(displayMax, (int)patterns.size());
 	int rowNum = 1;

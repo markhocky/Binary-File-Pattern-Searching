@@ -20,7 +20,6 @@ void printSAandLCP(vector<int> SA, vector<int> LCP,
 
 void printHex(vector<BYTE> inputString, int pos, int maxLen = 20);
 
-void printPatterns(vector<Pattern> patterns, vector<BYTE> input,
-		vector<int> SA, int displayMax);
+void printPatterns(vector<Pattern> patterns, vector<BYTE> input, int displayMax);
 
 #endif /* PROJECTIO_H_ */

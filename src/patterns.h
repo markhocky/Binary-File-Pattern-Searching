@@ -19,7 +19,10 @@ class Pattern {
 		int position;
 		int length;
 		int occurrences; // how many times the pattern occurs.
+		// Constructors
+		Pattern();
 		Pattern(int length, int position, int occurrences);
+		// Functions
 		bool allZeroes(vector<BYTE> input);
 };
 
