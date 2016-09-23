@@ -16,10 +16,17 @@ const char * testFile() {
 }
 /*
  * Other example files:
+ * ~15kb
  * "Sample Files/mapsettings.cfg"
  * "Sample Files/mapsettings1.cfg"
  * "Sample Files/mapsettings3.cfg"
+ * ~51kb
+ * "/media/sf_D_DRIVE/Uni/Sem162/CSG6224 - Special Topic/Reading 1 - Introduction.pdf"
+ * ~196kb
+ * "/media/sf_D_DRIVE/Uni/Sem162/CSG6224 - Special Topic/Reading 3 - Structure of the Research Proposal.pdf"
+ * ~2,477kb
  * "/media/sf_D_DRIVE/Uni/Sem152/CSI6110 - Software Development Processes/CSP2151 Lectures.zip"
+ * ~14,226kb
  * "/media/sf_D_DRIVE/Uni/Sem152/CSI6110 - Software Development Processes/Sommerville - Software Engineering - 9th Ed.pdf"
 */
 

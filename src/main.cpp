@@ -24,31 +24,59 @@ using namespace std;
 
 int main( int argc, char *argv[] )
 {
-	// Check input arguments
-	const char *file_path = argv[1];
-	bool testing = false;
+
+	// Check number of inputs
+	if (argc < 2) {
+		showProgramUsage(argv[0]);
+		return 1;
+	}
+
+	// Set up input parameters
+	const char *file_path;
+	int numResults = 20;
+	int smallestPattern = 4;
+	int biggestPattern = 12;
+	string algorithm = "SA_IS";
+	vector<string> implementedAlgorithms = {"SA_IS", "SA_DC3", "SW_M", "SW_MV", "KMP"};
+
+	// Get File Path
+	string firstArg = argv[1];
+	if (firstArg == "-h" || firstArg == "--help") {
+		showProgramUsage(argv[0]);
+		return 0;
+	} else {
+		file_path = argv[1];
+	}
+	//bool testing = false;
 	if (strcmp(file_path, "test") == 0) {
 		file_path = testFile();
-		testing = true;
+		//testing = true;
 	}
 
-	// Get numeric arguments;
-	istringstream ss2(argv[2]);
-	int numResults;
-	if (!(ss2 >> numResults)) {
-		cerr << "Invalid results number: " << argv[2] << endl;
+	for (int i = 2; i < argc; ++i) {
+		string arg = argv[i];
+		if (i + 1 != argc) {
+			if (arg == "-n" || arg == "--number") {
+				numResults = getInputInt(argv[i+1], "");
+			} else if (arg == "-p" || arg == "--patternmin") {
+				smallestPattern = getInputInt(argv[i+1], "");
+			} else if (arg == "-P" || arg == "--patternmax") {
+				biggestPattern = getInputInt(argv[i+1], "");
+			} else if (arg == "-a" || arg == "algorithm") {
+				algorithm = argv[i+1];
+			}
+		}
 	}
 
-	istringstream ss3(argv[3]);
-	int smallestPattern;
-	if (!(ss3 >> smallestPattern)) {
-		cerr << "Invalid pattern length: " << argv[3] << endl;
+	if (smallestPattern > biggestPattern) {
+		int temp = smallestPattern;
+		smallestPattern = biggestPattern;
+		biggestPattern = temp;
 	}
 
-	istringstream ss4(argv[4]);
-	int biggestPattern;
-	if (!(ss4 >> biggestPattern)) {
-		cerr << "Invalid pattern length: " << argv[4] << endl;
+	if (find(implementedAlgorithms.begin(), implementedAlgorithms.end(), algorithm) == implementedAlgorithms.end()) {
+		cout << "Algorithm: " << algorithm << " not implemented." << endl;
+		return 1;
 	}
 
 	cout << "Reading: " << file_path << "..." << endl;
@@ -56,43 +84,59 @@ int main( int argc, char *argv[] )
 	int n = inputString.size();
 	cout << "File read successfully. Num bytes read: " << n << endl;
 
-	// Note: DC3 algorithm requires integers representing the
-	// lexicographic order of the character in the dictionary
-	cout << "Creating integer input..." << endl;
-	vector<int> inputInts = createIntVector(inputString);
+	vector<Pattern> patterns;
 
-    cout << "Calculating SA..." << endl;
-    // Using SAIS
-    vector<int> SA (inputString.size(), 0);
-    int result = sais(inputString.data(), SA.data(), n);
-    if (result == -1) {
-    	cerr << "Problem with SAIS calculation" << endl;
-    }
+	if (algorithm == "SA_IS") {
+		cout << "Running Induced Sort Suffix Array." << endl;
+		cout << "Calculating SA..." << endl;
+		// Using SAIS
+		vector<int> SA (inputString.size(), 0);
+		int result = sais(inputString.data(), SA.data(), n);
+		if (result == -1) {
+			cerr << "Problem with SAIS calculation" << endl;
+		}
+		cout << "Calculating LCP..." << endl;
+		vector<int> LCP = kasai(inputString, SA);
+		patterns = findPatterns(smallestPattern, biggestPattern,
+		    		numResults, LCP, SA);
 
-    // Using DC3
-    //int K = 256; // Size of dictionary 'K'
-    //vector<int> SA = DC3(inputInts, (int)inputString.size(), K);
+	} else if (algorithm == "SA_DC3") {
+		cout << "Running Difference Cover Modulo 3 Suffix Array." << endl;
+		// Note: DC3 algorithm requires integers representing the
+		// lexicographic order of the character in the dictionary
+		vector<int> inputInts = createIntVector(inputString);
+		cout << "Calculating SA..." << endl;
+		// Using DC3
+		int K = 256; // Size of dictionary 'K'
+		vector<int> SA = DC3(inputInts, (int)inputString.size(), K);
+		cout << "Calculating LCP..." << endl;
+		vector<int> LCP = kasai(inputString, SA);
+		patterns = findPatterns(smallestPattern, biggestPattern,
+		    		numResults, LCP, SA);
 
-    cout << "Calculating LCP..." << endl;
-    vector<int> LCP = kasai(inputString, SA);
+	} else if (algorithm == "SW_M") {
+		cout << "SW_M not yet implemented." << endl;
+		return 1;
 
-    // Print the SA and LCP arrays
-    printSAandLCP(SA, LCP, inputString, 30);
+	} else if (algorithm == "SW_MV") {
+		cout << "Running Sliding Window search using map and vector." << endl;
+		cout << "Searching patterns..." << endl;
+		patterns = searchPatterns(inputString, smallestPattern, biggestPattern);
 
-    vector<Pattern> patterns = findPatterns(smallestPattern, biggestPattern,
-    		numResults, LCP, SA);
-	printPatterns(patterns, inputString, numResults);
+	} else if (algorithm == "KMP") {
+		cout << "Running Knuth-Morris-Pratt brute force search." << endl;
+		cout << "KMP not yet implemented." << endl;
+		return 1;
+		if (biggestPattern > 6) {
+			cout << "Reducing pattern search space, limiting largest pattern to 6" << endl;
+		}
 
-	if (testing) {
-		checkSAandLCP(SA, LCP);
+	} else {
+		cerr << "Algorithm: " << algorithm << " not implemented. Check help for options." << endl;
+		return 1;
 	}
 
-
-	cout << endl << "Pattern Search 2..." << endl;
-
-	vector<Pattern> P2 = searchPatterns(inputString, smallestPattern, biggestPattern);
-	printPatterns(P2, inputString, numResults);
-
+	printPatterns(patterns, inputString, numResults);
 
 	return 0;
 }

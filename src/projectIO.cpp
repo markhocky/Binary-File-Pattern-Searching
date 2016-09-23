@@ -8,10 +8,37 @@
 #include <algorithm>
 #include <iostream>
 #include <fstream>
+#include <sstream>
 #include <iomanip>
 #include "projectIO.h"
 
 using namespace std;
+
+void showProgramUsage(string name) {
+	cerr << "Usage: " << name
+		 << "FILENAME [Options]" << endl
+		 << "Options:" << endl
+		 << "\t-h, --help\t\tShow this help message." << endl
+		 << "\t-n, --number\t\tNumber of results to print (default 20)" << endl
+		 << "\t-p, --patternmin\tMin pattern length to search (default 4)" << endl
+		 << "\t-P, --patternmax\tMax pattern length to search (default 12)" << endl
+		 << "\t-a, --algorithm\t\tSelect the algorithm type:" << endl
+		 << "\t\t\t\tSA_IS\tInduced Sorting Suffix Array" << endl
+		 << "\t\t\t\tSA_DC3\tDifference Cover Modulo 3 Suffix Array" << endl
+		 << "\t\t\t\tSW_M\tSliding window search using map data structure" << endl
+		 << "\t\t\t\tSW_MV\tSliding window search using map and vector" << endl
+		 << "\t\t\t\tKMP\tKnuth-Morris-Pratt brute force string search, if this " << endl
+		 << "\t\t\t\t\tis selected max pattern length limited to 6." << endl;
+}
+
+int getInputInt(string arg, string errorMessage) {
+	istringstream ss(arg);
+	int input;
+	if (!(ss >> input)) {
+		cerr << errorMessage << ": " << arg << endl;
+	}
+	return input;
+}
 
 vector<BYTE> getFileByteVector(const char* filePath) {
 	BYTE *fileString;

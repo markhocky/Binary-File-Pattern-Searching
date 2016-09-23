@@ -13,6 +13,12 @@
 
 using namespace std;
 
+
+void showProgramUsage(string name);
+
+int getInputInt(string arg, string errorMessage);
+
+
 vector<BYTE> getFileByteVector(const char* filePath);
 
 void printSAandLCP(vector<int> SA, vector<int> LCP,

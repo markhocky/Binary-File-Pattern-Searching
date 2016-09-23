@@ -16,6 +16,7 @@ Pattern::Pattern() {
 	this->length = 0;
 	this->position = 0;
 	this->occurrences = 0;
+	this->prefixIndex = -1;
 }
 
 // Constructor
@@ -23,6 +24,15 @@ Pattern::Pattern(int length, int position, int occurrences) {
 	this->length = length;
 	this->position = position;
 	this->occurrences = occurrences;
+	this->prefixIndex = -1;
+}
+
+Pattern::Pattern(int length, int position, int occurrences,
+		int prefixIndex) {
+	this->length = length;
+	this->position = position;
+	this->occurrences = occurrences;
+	this->prefixIndex = prefixIndex;
 }
 
 bool Pattern::allZeroes(vector<BYTE> input) {
@@ -61,9 +71,9 @@ vector<Pattern> findPatternsOfLength(int m, vector<int> LCP, vector<int> SA) {
 	return patterns;
 }
 
-vector<Pattern> findPatterns(int start, int end, int numResults, vector<int> LCP, vector<int> SA) {
+vector<Pattern> findPatterns(int smallest, int largest, int numResults, vector<int> LCP, vector<int> SA) {
 	vector<Pattern> patterns;
-    for (int i = start; i <= end; i++) {
+    for (int i = smallest; i <= largest; i++) {
     	vector<Pattern> pttn = findPatternsOfLength(i, LCP, SA);
     	// Note we only want to copy over enough results for printing
     	int slice = min(numResults, (int)pttn.size());

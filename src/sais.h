@@ -1,4 +1,12 @@
 /*
+ * NOTE: This module was downloaded from:
+ * https://sites.google.com/site/yuta256/sais
+ * It is an implementation of the induced sorting suffix array
+ * construction algorithm.
+ * Ge Nong, Sen Zhang and Wai Hong Chan,
+ *      Two Efficient Algorithms for Linear Suffix Array Construction,
+ *      2008.
+ *
  * sais.h for sais-lite
  * Copyright (c) 2008-2010 Yuta Mori All Rights Reserved.
  *

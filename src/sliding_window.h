@@ -10,6 +10,7 @@
 
 #include "patterns.h"
 
-vector<Pattern> searchPatterns(vector<BYTE> input, int minLen, int maxLen);
+vector<Pattern> searchPatterns(const vector<BYTE> &input, int minLen, int maxLen);
+vector<Pattern> searchMap(const vector<BYTE> &input, int minLen, int maxLen);
 
 #endif /* SLIDING_WINDOW_H_ */
