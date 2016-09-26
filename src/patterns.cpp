@@ -78,8 +78,8 @@ vector<Pattern> findPatterns(int smallest, int largest, int numResults, vector<i
     	// Note we only want to copy over enough results for printing
     	int slice = min(numResults, (int)pttn.size());
     	patterns.insert(patterns.end(), pttn.begin(), pttn.begin() + slice);
-    	sort(patterns.begin(), patterns.end(), compareOccurrences);
     }
+    sort(patterns.begin(), patterns.end(), compareOccurrences);
 	return patterns;
 }
 

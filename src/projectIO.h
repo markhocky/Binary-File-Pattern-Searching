@@ -13,13 +13,15 @@
 
 using namespace std;
 
+int getParameters(int argc, char *argv[],
+		vector<BYTE> &inputString, int &numResults,
+		int &smallestPattern, int &biggestPattern, string &algorithm,
+		bool &verbose);
 
-void showProgramUsage(string name);
+void printOut(string output);
+void printError(string message);
 
-int getInputInt(string arg, string errorMessage);
-
-
-vector<BYTE> getFileByteVector(const char* filePath);
+void printMemUsage(string tag = "");
 
 void printSAandLCP(vector<int> SA, vector<int> LCP,
 		vector<BYTE> input, int displayMax);

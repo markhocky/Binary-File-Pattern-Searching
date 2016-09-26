@@ -5,12 +5,16 @@
  *      Author: mark
  */
 #include <string>
+#include <string.h>
 #include <algorithm>
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <iomanip>
+
 #include "projectIO.h"
+#include "MemUsage.h"
+#include "testing.h"
 
 using namespace std;
 
@@ -19,6 +23,7 @@ void showProgramUsage(string name) {
 		 << "FILENAME [Options]" << endl
 		 << "Options:" << endl
 		 << "\t-h, --help\t\tShow this help message." << endl
+		 << "\t-v, --verbose\t\tSwitch on verbose output." << endl
 		 << "\t-n, --number\t\tNumber of results to print (default 20)" << endl
 		 << "\t-p, --patternmin\tMin pattern length to search (default 4)" << endl
 		 << "\t-P, --patternmax\tMax pattern length to search (default 12)" << endl
@@ -27,8 +32,7 @@ void showProgramUsage(string name) {
 		 << "\t\t\t\tSA_DC3\tDifference Cover Modulo 3 Suffix Array" << endl
 		 << "\t\t\t\tSW_M\tSliding window search using map data structure" << endl
 		 << "\t\t\t\tSW_MV\tSliding window search using map and vector" << endl
-		 << "\t\t\t\tKMP\tKnuth-Morris-Pratt brute force string search, if this " << endl
-		 << "\t\t\t\t\tis selected max pattern length limited to 6." << endl;
+		 << "\t\t\t\tKMP\tKnuth-Morris-Pratt string search." << endl;
 }
 
 int getInputInt(string arg, string errorMessage) {
@@ -59,6 +63,70 @@ vector<BYTE> getFileByteVector(const char* filePath) {
 	return byteString;
 }
 
+int getParameters(int argc, char *argv[],
+		vector<BYTE> &inputString, int &numResults,
+		int &smallestPattern, int &biggestPattern, string &algorithm,
+		bool &verbose) {
+	// Check number of inputs
+	if (argc < 2) {
+		showProgramUsage(argv[0]);
+		return 1;
+	}
+
+	// Set up input parameters
+	const char *file_path;
+	numResults = 20;
+	smallestPattern = 4;
+	biggestPattern = 12;
+	algorithm = "SA_IS";
+
+	// Get File Path
+	string firstArg = argv[1];
+	if (firstArg == "-h" || firstArg == "--help") {
+		showProgramUsage(argv[0]);
+		return 1;
+	} else {
+		file_path = argv[1];
+	}
+	if (strcmp(file_path, "test") == 0) {
+		file_path = testFile();
+	}
+
+	for (int i = 2; i < argc; ++i) {
+		string arg = argv[i];
+		if (i + 1 != argc) {
+			if (arg == "-n" || arg == "--number") {
+				numResults = getInputInt(argv[i+1], "");
+			} else if (arg == "-p" || arg == "--patternmin") {
+				smallestPattern = getInputInt(argv[i+1], "");
+			} else if (arg == "-P" || arg == "--patternmax") {
+				biggestPattern = getInputInt(argv[i+1], "");
+			} else if (arg == "-a" || arg == "--algorithm") {
+				algorithm = argv[i+1];
+			}
+		}
+		if (arg == "-v" || arg == "--verbose") {
+			verbose = true;
+		}
+	}
+
+	if (smallestPattern > biggestPattern) {
+		int temp = smallestPattern;
+		smallestPattern = biggestPattern;
+		biggestPattern = temp;
+	}
+
+	if (verbose) {
+		printOut("Reading: " + (string)file_path);
+	}
+	inputString = getFileByteVector(file_path);
+	if (verbose) {
+		int n = inputString.size();
+		cout << "File read successfully. Num bytes read: " << n << endl;
+	}
+	return 0;
+}
+
 void printHex(vector<BYTE> input, int pos, int maxLen) {
 	int printMax = pos + min(maxLen, (int)input.size() - pos);
 	for (int i = pos; i < printMax; i++) {
@@ -67,6 +135,22 @@ void printHex(vector<BYTE> input, int pos, int maxLen) {
 
 	}
 	cout << dec;
+}
+
+void printOut(string output) {
+	cout << output << endl;
+}
+
+void printError(string message) {
+	cerr << message << endl;
+}
+
+void printMemUsage(string tag) {
+	double vm, rss;
+	process_mem_usage(vm, rss);
+	cout << tag
+		 << " VM: " << vm
+		 << "; RSS: " << rss << endl;
 }
 
 void printSAandLCP(vector<int> SA, vector<int> LCP, vector<BYTE> input, int displayMax) {

@@ -117,7 +117,7 @@ void buildSuffixArray(int* inputInts, int* SA, int n, int K) {
 	delete [] R; delete [] SA12; delete [] SA0; delete [] R0;
 }
 
-vector<int> DC3(vector<int> inputInts, int n, int K) {
+vector<int> DC3(vector<int> &inputInts, int n, int K) {
 	vector<int> SA (n + 3, 0);
 	buildSuffixArray(inputInts.data(), SA.data(), n, K);
 	// Remove the 3 padding zeroes at the end

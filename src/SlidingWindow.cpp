@@ -5,11 +5,12 @@
  *      Author: mark
  */
 
+#include "SlidingWindow.h"
+
 #include <iostream>
 #include <map>
 #include <string>
 #include <algorithm>
-#include "sliding_window.h"
 
 using namespace std;
 
@@ -53,15 +54,42 @@ int getIndex(string patternString, vector <Pattern> &results,
 
 
 vector<Pattern> searchPatterns(const vector<BYTE> &input, int minLen, int maxLen) {
-	vector <Pattern> results;
+	vector <Pattern> patterns;
 	map <string, int> index;
 	int n = (int)input.size();
 	for (int i = 0; i <= (n - minLen); ++i) {
 		int endPos = min(n, i + maxLen);
 		string patternString (input.begin() + i, input.begin() + endPos);
-		getIndex(patternString, results, index, i, minLen);
+		getIndex(patternString, patterns, index, i, minLen);
 	}
-	sort(results.begin(), results.end(), compareOccurrences);
-	return results;
+	sort(patterns.begin(), patterns.end(), compareOccurrences);
+	return patterns;
+}
+
+vector<Pattern> searchPatternsMap(const vector<BYTE> &input, int minLen, int maxLen) {
+	vector <Pattern> patterns;
+	map <string, Pattern> index;
+	int n = (int)input.size();
+	for (int i = 0; i <= (n - minLen); ++i) {
+		int endPos = min(n, i + maxLen);
+		string patternString (input.begin() + i, input.begin() + endPos);
+
+		while ((int)patternString.length() >= minLen) {
+			int len = (int)patternString.length();
+			if (index.find(patternString) == index.end()) {
+				// Create pattern
+				Pattern pattern = Pattern(len, i, 1);
+				index[patternString] = pattern;
+			} else {
+				index[patternString].occurrences++;
+			}
+			patternString = patternString.substr(0, len - 1);
+		}
+	}
+	for( map<string, Pattern>::iterator it = index.begin(); it != index.end(); ++it ) {
+		patterns.push_back(it->second);
+	}
+	sort(patterns.begin(), patterns.end(), compareOccurrences);
+	return patterns;
 }
 
