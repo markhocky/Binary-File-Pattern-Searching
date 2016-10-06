@@ -13,13 +13,13 @@
 #include <map>
 #include <time.h>
 
-#include "DC3.h"
-#include "sais.h"
 #include "Kasai_LCP.h"
 #include "KMP.h"
 #include "patterns.h"
 #include "projectIO.h"
-#include "SlidingWindow.h"
+#include "SA_DC3.h"
+#include "SA_IS.h"
+#include "SW_M_MV.h"
 
 using namespace std;
 
@@ -113,7 +113,10 @@ int main( int argc, char *argv[] )
 
 	} else if (algorithm == "KMP") {
 		if (verbose) printOut("Running Knuth-Morris-Pratt search.");
-		patterns = KMPsearch(inputString, smallestPattern, biggestPattern, numResults, 2);
+		// Support is the minimum number of occurrences required before a pattern
+		// is reported on.
+		int support = 2;
+		patterns = KMPsearch(inputString, smallestPattern, biggestPattern, numResults, support);
 
 
 	} else {

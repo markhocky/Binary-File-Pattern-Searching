@@ -8,6 +8,7 @@
 #ifndef PROJECTIO_H_
 #define PROJECTIO_H_
 
+#include <string>
 #include <vector>
 #include "patterns.h"
 

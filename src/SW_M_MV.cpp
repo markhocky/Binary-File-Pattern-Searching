@@ -5,7 +5,7 @@
  *      Author: mark
  */
 
-#include "SlidingWindow.h"
+#include "SW_M_MV.h"
 
 #include <iostream>
 #include <map>

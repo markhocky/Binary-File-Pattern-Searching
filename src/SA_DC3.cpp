@@ -5,8 +5,9 @@
  * 	Linear Work Suffix Array Construction (Appendix A)
  * Has been modified to work with Byte input.
  */
+#include "SA_DC3.h"
+
 #include <iostream>
-#include "DC3.h"
 
 // Convert input string into integers.
 vector<int> createIntVector(vector<BYTE> inputString) {

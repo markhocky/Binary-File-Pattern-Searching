@@ -24,9 +24,10 @@
  * OTHER DEALINGS IN THE SOFTWARE.
  */
 
+#include "SA_IS.h"
+
 #include <assert.h>
 #include <stdlib.h>
-#include "sais.h"
 
 #ifndef UCHAR_SIZE
 # define UCHAR_SIZE 256

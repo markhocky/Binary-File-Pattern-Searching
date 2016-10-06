@@ -5,8 +5,8 @@
  *      Author: mark
  */
 
-#ifndef SLIDINGWINDOW_H_
-#define SLIDINGWINDOW_H_
+#ifndef SW_M_MV_H_
+#define SW_M_MV_H_
 
 #include "patterns.h"
 
@@ -14,4 +14,4 @@ vector<Pattern> searchPatterns(const vector<BYTE> &input, int minLen, int maxLen
 vector<Pattern> searchPatternsMap(const vector<BYTE> &input, int minLen, int maxLen);
 vector<Pattern> searchMap(const vector<BYTE> &input, int minLen, int maxLen);
 
-#endif /* SLIDINGWINDOW_H_ */
+#endif /* SW_M_MV_H_ */

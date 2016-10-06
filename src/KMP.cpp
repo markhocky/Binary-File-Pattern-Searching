@@ -20,7 +20,7 @@ void preKmp(BYTE *x, int m, int kmpNext[]) {
          j = kmpNext[j];
       i++;
       j++;
-      if (x[i] == x[j])
+      if (i < m && x[i] == x[j])
          kmpNext[i] = kmpNext[j];
       else
          kmpNext[i] = j;
@@ -35,7 +35,7 @@ void preKmp(BYTE *x, int m, int kmpNext[]) {
  * n - the length of the string
  */
 
-vector<int> KMP(BYTE *x, int m, vector<BYTE> &y, int n) {
+vector<int> KMP(BYTE *x, int m, BYTE *y, int n) {
 	vector<int> positions;
     int i, j, kmpNext[m+1];
 
@@ -47,8 +47,8 @@ vector<int> KMP(BYTE *x, int m, vector<BYTE> &y, int n) {
 	while (j < n) {
 	  while (i > -1 && x[i] != y[j])
 		 i = kmpNext[i];
-	  i++;
-	  j++;
+	  ++i;
+	  ++j;
 	  if (i >= m) {
 		 positions.push_back(j - i);
 		 i = kmpNext[i];
@@ -66,15 +66,15 @@ vector<Pattern> KMPsearchLength(vector<BYTE> &input, int len, int support) {
 		if (patternPositions[i] > 0) {
 			continue;
 		}
-		vector<int> positions = KMP(&input[i], len, input, n);
+		vector<int> positions = KMP(&input[i], len, &input[i], n - i);
 		int occ = (int)positions.size();
-		for (int i = 0; i < occ; ++i) {
-			patternPositions[positions[i]] = occ;
+
+		for (vector<int>::iterator pos = positions.begin(); pos != positions.end(); ++pos) {
+			patternPositions[*pos + i] = occ;
 		}
-		if (occ >= support) {
-			Pattern pattern = Pattern(len, i, occ);
-			patterns.push_back(pattern);
-		}
+
+		Pattern pattern = Pattern(len, i, occ);
+		patterns.push_back(pattern);
 	}
 	sort(patterns.begin(), patterns.end(), compareOccurrences);
 	return patterns;
